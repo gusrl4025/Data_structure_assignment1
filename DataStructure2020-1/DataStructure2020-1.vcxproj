@@ -152,6 +152,7 @@
     <ClInclude Include="CircularQueue.h" />
     <ClInclude Include="ContainerType.h" />
     <ClInclude Include="DoublyIterator.h" />
+    <ClInclude Include="DoublyLinkedQueue.h" />
     <ClInclude Include="DoublySortedLinkedList.h" />
     <ClInclude Include="ItemType.h" />
     <ClInclude Include="pch.h" />

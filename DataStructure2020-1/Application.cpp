@@ -331,6 +331,30 @@ int Application::GetCommandTemp()
 	return command;
 }
 
+// shows menu and receive the command from keyboard
+int Application::GetCommandAccountBook()
+{
+	int command;
+	cout << endl << endl;
+	cout << "\tAccountBook에서 실행할 command를 입력하세요\n";
+	cout << "\t=ID ================= Command =====================\n";
+	cout << "\t 1 : Item 추가하기\n";
+	cout << "\t 2 : Item 제거하기 \n";
+	cout << "\t 3 : Item 업데이트하기\n";
+	cout << "\t 4 :	Item 검색하기\n";
+	cout << "\t 5 : 종류로 Item 검색하기\n";
+	cout << "\t 6 : 이름으로 Item 검색하기\n";
+	cout << "\t 7 : 구매일로 Item 검색하기\n";
+	cout << "\t 8 : TempList 비우기\n";
+	cout << "\t 9 : 모든 Item 출력하기\n";
+	cout << "\t 10 : MasterList로 Item 옮기기 \n";
+	cout << "\t 0 : 목록으로 돌아가기\n" << endl;
+	cout << endl << "\t Choose a Command--> ";
+	cin >> command;
+	cout << endl;
+	return command;
+}
+
 // receive Goods record from keyboard and add to list
 bool Application::AddItem() {
 	cout << "\t=====================Add item=====================\n";

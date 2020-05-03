@@ -55,6 +55,9 @@
     <ClInclude Include="DoublyIterator.h">
       <Filter>List</Filter>
     </ClInclude>
+    <ClInclude Include="DoublyLinkedQueue.h">
+      <Filter>List</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp">

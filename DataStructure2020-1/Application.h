@@ -9,6 +9,7 @@ public:
 	*/
 	Application() {
 		m_Command = 0;
+		m_Money = 0;
 	}
 
 	/*
@@ -38,6 +39,7 @@ public:
 	int GetCommandStorage();
 	int GetCommandContainer(int InStorageId);
 	int GetCommandTemp();
+	int GetCommandAccountBook();
 
 	/*
 		@brief	Item을 입력받아 ContainerId가 있으면 MasterList -1이면 TempList에 넣는다.
@@ -314,6 +316,7 @@ private:
 	TempType m_TempList;
 	SortedList<StorageType> m_StorageList;
 	int m_Command;
+	int m_Money;
 };
 
 
