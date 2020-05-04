@@ -127,6 +127,14 @@ public:
 	*/
 	void DisplayAllContainer();
 
+	/*
+		@brief	container목록을 masterlist를 참조하여 출력한다
+		@pre	containerlist가 초기화돼야한다
+		@post	container목록이 출력된다
+		@param	list	MasterList를 참조
+	*/
+	void DisplayAllDetailsContainer(DoublySortedLinkedList<ItemType>& list);
+
 	bool operator==(const StorageType& storage) {
 		if (GetId() == storage.GetId()) return true;
 		return false;

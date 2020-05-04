@@ -99,6 +99,16 @@ void ItemType::DisplayStorageIdOnScreen()
 	cout << "\tStorageId : " << m_StorageId << "\n";
 }
 
+void ItemType::DisplayGoodsExceptStorageOnScreen()
+{
+	DisplayKindOnScreen();
+	DisplayPurchaseDayOnScreen();
+	DisplayNameOnScreen();
+	DisplayPriceOnScreen();
+	DisplayIdOnScreen();
+	cout << "\n\n";
+}
+
 // display Goods record on screeen
 void ItemType::DisplayGoodsOnScreen() {
 	DisplayKindOnScreen();

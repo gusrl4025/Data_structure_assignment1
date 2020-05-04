@@ -124,3 +124,16 @@ void StorageType::DisplayAllContainer()
 		container.DisplayAllItem();
 	}
 }
+
+void StorageType::DisplayAllDetailsContainer(DoublySortedLinkedList<ItemType>& list)
+{
+	ContainerType container;
+	ContainerList.ResetList();
+	for (int i = 0; i < CurrentNum; i++) {
+		ContainerList.GetNextItem(container);
+		container.DisplayContainerOnScreen();
+		container.DisplayAllPhoto();
+		container.DisplayAllDetailsItem(list);
+		cout << "\t-----------------------------------------------\n";
+	}
+}

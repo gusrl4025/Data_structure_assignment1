@@ -27,6 +27,7 @@ public:
 	int RunStorage();
 	void RunContainer(int InStorageId);
 	void RunTemp();
+	void RunAccountBook();
 
 	/*
 		@brief	shows menu and receive the command from keyboard
@@ -104,7 +105,7 @@ public:
 		@post	the records wanted to find displayed on screen
 		@return if function works return true, otherwise return false
 	*/
-	bool SearchByPurchasePeriod();
+	bool SearchByPurchasePeriodMasterList();
 
 	/*
 		@brief	make MasterList empty
@@ -150,7 +151,7 @@ public:
 		@pre	MasterList와 storageList가 초기화돼야함
 		@post	입력받은 Storage안에 있는 container의 상세 정보와 리스트가 출력됨
 	*/
-	//void DisPlayAllDetailsContainer();
+	void DisPlayAllDetailsContainer();
 	//----------------------- RunContainer ---------------------------------------------------
 
 	/*
@@ -308,7 +309,6 @@ public:
 		@brief	move all items in TempList to MasterList
 		@pre	MasterList and TempList should be initialized
 		@post	items in TempList moved to MasterList
-		@return if function works return true, otherwise return false
 	*/
 	void MoveItemTempToMaster();
 private:

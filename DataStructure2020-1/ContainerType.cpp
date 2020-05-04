@@ -180,15 +180,14 @@ void ContainerType::DisplayAllPhoto()
 }
 
 // Container의 item을 masterlist에서 참조해서 display한다
-void ContainerType::DisplayAllDetailsItem(SortedList<ItemType>& masterlist)
+void ContainerType::DisplayAllDetailsItem(DoublySortedLinkedList<ItemType>& list)
 {
 	SimpleItemType simpleitem;
 	m_SimpleItemList.ResetList();
 	while (m_SimpleItemList.GetNextItem(simpleitem)) {
-		ItemType item;
-		item.SetId(simpleitem.GetId());
-		masterlist.Retrieve_Binary(item);
-		item.DisplayGoodsOnScreen();
+		ItemType item(simpleitem.GetId());
+		list.Retrieve(item);
+		item.DisplayGoodsExceptStorageOnScreen();
 	}
 
 }

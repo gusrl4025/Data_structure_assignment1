@@ -4,12 +4,8 @@
 template<typename ItemType>
 class DoublyIterator;
 
-template <typename ItemType>
-struct DoublyNodeType {
-	ItemType info;
-	DoublyNodeType* next;
-	DoublyNodeType* prev;
-};
+template<typename ItemType>
+struct DoublyNodeType;
 
 template <typename ItemType>
 class DoublySortedLinkedList {
@@ -42,13 +38,6 @@ public:
 	*/
 	int GetLength() const;
 
-	/*
-		@brief	check capacity of list is full
-		@pre	none
-		@post	none
-		@return	return true if a number of records in list is MAXSIZE, otherwise return false
-	*/
-	bool IsFull() const;
 
 	bool IsEmpty() const;
 
@@ -147,13 +136,6 @@ template<typename ItemType>
 inline int DoublySortedLinkedList<ItemType>::GetLength() const
 {
 	return m_Length;
-}
-
-// check capacity of list is full
-template<typename ItemType>
-inline bool DoublySortedLinkedList<ItemType>::IsFull() const
-{
-	return false;
 }
 
 template<typename ItemType>

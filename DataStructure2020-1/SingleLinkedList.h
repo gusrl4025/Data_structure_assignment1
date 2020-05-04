@@ -300,7 +300,6 @@ bool SingleLinkedList<ItemType>::GetNextItem(ItemType& item)
 	}
 
 	if (m_pCurPointer->next == nullptr) {
-		ResetList();
 		return false;
 	}
 

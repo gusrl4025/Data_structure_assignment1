@@ -12,12 +12,6 @@ TempType::~TempType()
 {
 }
 
-// TempList가 가득 찼는지 확인
-bool TempType::IsFull() const
-{
-	if (NumOfItems == MAXQUEUE) return true;
-	return false;
-}
 
 // TempList의 item 개수를 return	
 int TempType::GetNumOfItems() const
@@ -28,15 +22,12 @@ int TempType::GetNumOfItems() const
 // TempList에 item을 Enqueue한다
 bool TempType::EnQueue(const ItemType& item)
 {
-	ItemType temp;
-	temp.SetId(item.GetId());
+	ItemType temp(item.GetId());
 	if (!m_TempItemList.Retrieve(temp)) {
-		if (m_TempItemList.EnQueue(item)) {
-			NumOfItems++;
-			return true;
-		}
+		m_TempItemList.EnQueue(item);
+		return true;
 	}
-	cout << "\t중복된 Id가 있습니다\n";
+	cout << "\t중복된 Id가 존재합니다\n";
 	return false;
 }
 
@@ -84,26 +75,31 @@ bool TempType::Replace(const ItemType& item)
 // TempItemList에 있는 모든 원소를 Display한다.	
 void TempType::DisplayAllTempItems()
 {
-	ItemType item;
-	m_TempItemList.ResetList();
-	for (int i = 0; i < NumOfItems; i++) {
-		m_TempItemList.GetNextItem(item);
-		item.DisplayGoodsOnScreen();
+	DoublyQueueIterator<ItemType> itor(m_TempItemList);
+	ItemType item = itor.Next();
+	
+	while (itor.NextNotNull()) {
+		item.DisplayGoodsExceptStorageOnScreen();
+		item = itor.Next();
 	}
 }
 
 // 입력받은 Kind와 같은 아이템을 TempList에서 찾아 출력한다.
 bool TempType::SearchByKind()
 {
-	ItemType item;
+	DoublyQueueIterator<ItemType> itor(m_TempItemList);
+	ItemType item = itor.Next();
+	
 	ItemType temp;
-	bool found;
-	item.SetKindFromKB();
-	cout << "\t=====================Item Kind:" << item.GetKind() << "=====================\n";
-	m_TempItemList.ResetList();
-	while (m_TempItemList.GetNextItem(temp) == true) {
-		if (temp.GetKind() == item.GetKind()) {
-			temp.DisplayGoodsOnScreen();
+	temp.SetKindFromKB();
+	bool found = false;
+
+	cout << "\t=====================Item Kind:" << temp.GetKind() << "=====================\n";
+	
+	while (itor.NextNotNull()) {
+		if (item.GetKind() == temp.GetKind()) {
+			item.DisplayGoodsExceptStorageOnScreen();
+			item = itor.Next();
 			found = true;
 		}
 	}
@@ -117,14 +113,19 @@ bool TempType::SearchByKind()
 // 입력받은 Name와 같은 아이템을 TempList에서 찾아 출력한다.
 bool TempType::SearchByName()
 {
-	ItemType item;
+	DoublyQueueIterator<ItemType> itor(m_TempItemList);
+	ItemType item = itor.Next();
+
 	ItemType temp;
-	bool found;
-	item.SetNameFromKB();
-	m_TempItemList.ResetList();
-	while (m_TempItemList.GetNextItem(temp) == true) {
-		if (temp.GetName() == item.GetName()) {
-			temp.DisplayGoodsOnScreen();
+	temp.SetNameFromKB();
+	bool found = false;
+
+	cout << "\t=====================Item Name:" << temp.GetName() << "=====================\n";
+
+	while (itor.NextNotNull()) {
+		if (item.GetName() == temp.GetName()) {
+			item.DisplayGoodsExceptStorageOnScreen();
+			item = itor.Next();
 			found = true;
 		}
 	}
@@ -138,14 +139,19 @@ bool TempType::SearchByName()
 // 입력받은 PurchaseDay와 같은 아이템을 TempList에서 찾아 출력한다.
 bool TempType::SearchByPurchaseDay()
 {
-	ItemType item;
+	DoublyQueueIterator<ItemType> itor(m_TempItemList);
+	ItemType item = itor.Next();
+
 	ItemType temp;
-	bool found;
-	item.SetPurchaseDayFromKB();
-	m_TempItemList.ResetList();
-	while (m_TempItemList.GetNextItem(temp) == true) {
-		if (temp.GetPurchaseDay() == item.GetPurchaseDay()) {
-			temp.DisplayGoodsOnScreen();
+	temp.SetPurchaseDayFromKB();
+	bool found = false;
+
+	cout << "\t=====================Item PurchaseDay:" << temp.GetPurchaseDay() << "=====================\n";
+
+	while (itor.NextNotNull()) {
+		if (item.GetPurchaseDay() == temp.GetPurchaseDay()) {
+			item.DisplayGoodsExceptStorageOnScreen();
+			item = itor.Next();
 			found = true;
 		}
 	}
@@ -155,4 +161,5 @@ bool TempType::SearchByPurchaseDay()
 	}
 	return true;
 }
+
 

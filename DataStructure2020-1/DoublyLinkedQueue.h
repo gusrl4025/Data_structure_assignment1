@@ -1,22 +1,16 @@
 #pragma once
-
-#pragma once
-#include "DoublyIterator.h"
+#include "DoublyQueueIterator.h"
 
 template<typename ItemType>
-class DoublyIterator;
+class DoublyQueueIterator;
 
-template <typename ItemType>
-struct DoublyNodeType {
-	ItemType info;
-	DoublyNodeType* next;
-	DoublyNodeType* prev;
-};
+template<typename ItemType>
+struct DoublyNodeType;
 
 template <typename ItemType>
 class DoublyLinkedQueue {
 
-	friend class DoublyIterator<ItemType>;
+	friend class DoublyQueueIterator<ItemType>;
 
 public:
 	/*
@@ -106,6 +100,8 @@ public:
 	*/
 	void DisplayQueue();
 
+	
+
 private:
 	DoublyNodeType<ItemType>* m_pFirst;
 	DoublyNodeType<ItemType>* m_pLast;
@@ -142,7 +138,7 @@ template<typename ItemType>
 inline void DoublyLinkedQueue<ItemType>::MakeEmpty()
 {
 	DoublyNodeType<ItemType>* pItem;
-	DoublyIterator<ItemType> itor(*this);
+	DoublyQueueIterator<ItemType> itor(*this);
 	itor.Next();
 
 	while (itor.NextNotNull()) {
@@ -178,37 +174,15 @@ inline bool DoublyLinkedQueue<ItemType>::IsEmpty() const
 template<typename ItemType>
 inline bool DoublyLinkedQueue<ItemType>::EnQueue(const ItemType& item)
 {
-	DoublyIterator<ItemType> itor(*this);
-	itor.Next();
+	DoublyNodeType<ItemType>* pItem = new DoublyNodeType<ItemType>;
+	pItem->info = item;
+	pItem->next = m_pFirst->next;
+	pItem->prev = m_pFirst;
+	m_pFirst->next = pItem;
+	pItem->next->prev = pItem;
+	m_Length++;
+	return true;
 
-	if (IsEmpty()) {
-		DoublyNodeType<ItemType>* pItem = new DoublyNodeType<ItemType>;
-		pItem->info = item;
-		pItem->next = m_pLast;
-		pItem->prev = m_pFirst;
-		m_pFirst->next = pItem;
-		m_pLast->prev = pItem;
-		m_Length++;
-		return true;
-	}
-
-	else {
-		while (1) {
-			if (itor.m_pCurPointer == m_pLast) {
-				DoublyNodeType<ItemType>* pItem = new DoublyNodeType<ItemType>;
-				pItem->info = item;
-				pItem->next = itor.m_pCurPointer;
-				pItem->prev = itor.m_pCurPointer->prev;
-				itor.m_pCurPointer->prev->next = pItem;
-				itor.m_pCurPointer->prev = pItem;
-				m_Length++;
-				return true;
-			}
-			else (itor.m_pCurPointer->info < item) {
-				itor.Next();
-			}
-		}
-	}
 }
 
 template<typename ItemType>
@@ -218,7 +192,7 @@ inline bool DoublyLinkedQueue<ItemType>::DeQueue(ItemType& item)
 		return false;
 	}
 	else {
-		DoublyNodeType<ItemType>* pItem = new DoublyNodeType<pItem>;
+		DoublyNodeType<ItemType>* pItem = new DoublyNodeType<ItemType>;
 		pItem = m_pLast->prev;
 		item = pItem->info;
 		pItem->prev->next = m_pLast;
@@ -233,7 +207,7 @@ inline bool DoublyLinkedQueue<ItemType>::DeQueue(ItemType& item)
 template<typename ItemType>
 inline bool DoublyLinkedQueue<ItemType>::Retrieve(ItemType& item)
 {
-	DoublyIterator<ItemType> itor(*this);
+	DoublyQueueIterator<ItemType> itor(*this);
 	itor.Next();
 
 	while (itor.m_pCurPointer != m_pLast)
@@ -254,7 +228,7 @@ inline bool DoublyLinkedQueue<ItemType>::Retrieve(ItemType& item)
 template<typename ItemType>
 inline bool DoublyLinkedQueue<ItemType>::Delete(ItemType& item)
 {
-	DoublyIterator<ItemType> itor(*this);
+	DoublyQueueIterator<ItemType> itor(*this);
 	itor.Next();
 
 	while (itor.m_pCurPointer != m_pLast) {
@@ -277,7 +251,7 @@ inline bool DoublyLinkedQueue<ItemType>::Delete(ItemType& item)
 template<typename ItemType>
 inline bool DoublyLinkedQueue<ItemType>::Replace(const ItemType& item)
 {
-	DoublyIterator<ItemType> itor(*this);
+	DoublyQueueIterator<ItemType> itor(*this);
 	itor.Next();
 
 	while (itor.m_pCurPointer != m_pLast) {

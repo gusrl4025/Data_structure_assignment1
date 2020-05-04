@@ -14,14 +14,6 @@ public:
 	~TempType();
 
 	/*
-		@brief	TempList가 가득 찼는지 확인
-		@pre	TempList가 초기화돼야한다
-		@post	none
-		@return	가득 찼으면 return 1, 아니면 return 0;
-	*/
-	bool IsFull() const;
-
-	/*
 		@brief	TempList의 item 개수를 return
 		@pre	none
 		@post	none
@@ -119,8 +111,9 @@ public:
 		@return	item을 찾아서 출력하면 true, 아니면 false
 	*/
 	bool SearchByPurchaseDay();
+
 private:
 	int NumOfItems;
-	Queue<ItemType> m_TempItemList;
+	DoublyLinkedQueue<ItemType> m_TempItemList;
 };
 

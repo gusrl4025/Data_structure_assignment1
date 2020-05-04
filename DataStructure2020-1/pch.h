@@ -19,6 +19,7 @@ using namespace std;
 #include "CircularQueue.h"
 #include "DoublySortedLinkedList.h"
 #include "DoublyIterator.h"
+#include "DoublyLinkedQueue.h"
 
 #include "ItemType.h"
 #include "SimpleItemType.h"

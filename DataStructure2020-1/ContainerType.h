@@ -176,7 +176,7 @@ public:
 		@pre	masterlist가 초기화돼야한다
 		@post	Container의 item 정보가 전부출력된다
 	*/
-	void DisplayAllDetailsItem(SortedList<ItemType>& masterlist);
+	void DisplayAllDetailsItem(DoublySortedLinkedList<ItemType>& list);
 
 	/*
 		@brief	SimpleItem의 Id을 입력받아 m_SimpleItemList에서 같은 Id을 가진 item을 참조한다.
