@@ -256,9 +256,9 @@ int Application::GetCommand()
 {
 	int command;
 	cout << endl << endl;
-	cout << "\t===================================================\n";
-	cout << "\t|집안물품 정리 프로그램에 접속하신 것을 환영합니다|\n";
-	cout << "\t=ID ================= Command =====================\n";
+	cout << "\t==================================================================\n";
+	cout << "\t|집안물품 정리 및 가계부 관리 프로그램에 접속하신 것을 환영합니다|\n";
+	cout << "\t=ID ======================= Command ==============================\n";
 	cout << "\t 1 : Add Item\n";
 	cout << "\t 2 : MasterList에 접근하기\n";
 	cout << "\t 3 : StorageList에 접근하기\n";
@@ -1137,8 +1137,10 @@ void Application::MoveItemTempToMaster()
 	}
 }
 
+// 날짜를 입력받아 그 날 구매한 물품 목록과 총액을 출력한다.
 void Application::DisplayDayExpenseRecord()
 {
+	// 찾고자하는 날짜를 입력한다
 	int m_Sum = 0;
 	DoublyIterator<ItemType> itor(m_MasterList);
 	ItemType item;
@@ -1146,13 +1148,13 @@ void Application::DisplayDayExpenseRecord()
 	bool found = false;
 	item.SetPurchaseDayFromKB();
 
-
+	// 출력한 후 총액을 더한다
 	cout << "\n\t=====================Item PurchaseDay:" << item.GetPurchaseDay() << "=====================\n";
 	while (itor.NextNotNull()) {
 		if (temp.GetPurchaseDay() == item.GetPurchaseDay()) {
 			temp.DisplayNameOnScreen();
 			temp.DisplayKindOnScreen();
-			temp.DisplayNameOnScreen();
+			temp.DisplayPriceOnScreen();
 			temp.DisplayIdOnScreen();
 			cout << "\n";
 			found = true;
@@ -1162,17 +1164,18 @@ void Application::DisplayDayExpenseRecord()
 	}
 
 
-
 	if (!found) {
 		cout << "\t해당하는 날에 구매한 item이 존재하지 않습니다.\n";
 		return;
 	}
+	// 총액을 출력한다.
 	cout << "\n\t===================" << item.GetPurchaseDay() << " 날 지출 총액 : " << m_Sum << "원===================\n";
 }
 
 // 달을 입력받아 그 해의 소비 분석 결과가 출력된다.
 void Application::DisplayMonthExpenseRecord()
 {
+	// 물건 종류별로 배열을 만들어 값을 저장한다
 	int* ExpenseSumPerKind = new int[5]();
 	DoublyIterator<ItemType> itor(m_MasterList);
 	ItemType temp = itor.Next();
@@ -1184,6 +1187,7 @@ void Application::DisplayMonthExpenseRecord()
 		cout << "\n\t잘못 입력하였습니다. 소비 내역을 알고 싶은 달을 다시 입력하시오 (예: 202005 (2020년 5월)) :";
 	}
 
+	// MasterList에서 Item을 찾고 출력한다.
 	cout << "\n\t=====================Item PurchaseMonth:" << m_Month << "=====================\n";
 	while (itor.NextNotNull()) {
 		if (temp.GetPurchaseDay() / 100 == m_Month) {
@@ -1202,16 +1206,20 @@ void Application::DisplayMonthExpenseRecord()
 		cout << "\t해당하는 달에 구매한 item이 존재하지 않습니다.\n";
 		delete[] ExpenseSumPerKind;
 	}
+
+	// 해당 기간내 아이템을 종류별로 구분하여 가격을 따로따로 더한다
 	else {
 		int MaxExpenseKind = 0;
 		for (int i = 1; i < 5; i++) {
 			if (ExpenseSumPerKind[MaxExpenseKind] < ExpenseSumPerKind[i])
 				MaxExpenseKind = i;
 		}
+		// 최대로 많이 쓴 것을 차트에서 네모 25칸을 기준으로 한다
 		int PricePerBlock = ExpenseSumPerKind[MaxExpenseKind] / 25;
 
 		int m_Sum = 0;
 
+		// 최대로 많이 낸 달을 25칸을 기준으로 각 달마다 쓴돈을 차트로 표현한다
 		cout << "\n\t=========================" << m_Month << " 달 소비 분석==========================\n";
 		cout << "\t--------------------- 물건 종류 별 소비 막대차트 ---------------------\n\n";
 		cout << "\t         │\n";
@@ -1224,6 +1232,7 @@ void Application::DisplayMonthExpenseRecord()
 			cout << " (" << ExpenseSumPerKind[i] << "원)\n";
 			cout << "\t         │\n";
 		}
+		// 마지막으로 그 달에 쓴 총액을 출력한다.
 		cout << "\n\t====================" << m_Month << " 달 지출 총액 : " << m_Sum << "원====================\n";
 
 		delete[] ExpenseSumPerKind;
@@ -1232,8 +1241,9 @@ void Application::DisplayMonthExpenseRecord()
 
 // 해를 입력받아 그 해의 소비 분석 결과가 출력된다.
 void Application::DisplayYearExpenseRecord()
-{
-	int* ExpenseSumPerKind = new int[5]();
+{	
+	// 물건 종류와 달 별로 배열을 만들어 각각에 값을 저장한다.
+	int* ExpenseSumPerKind = new int[5]();	
 	int* ExpenseSumPerMonth = new int[12]();
 
 	DoublyIterator<ItemType> itor(m_MasterList);
@@ -1248,6 +1258,7 @@ void Application::DisplayYearExpenseRecord()
 		cin >> m_Year;
 	}
 
+	// MasterList에서 Item을 찾고 출력한다.
 	cout << "\n\t=====================Item PurchaseYear:" << m_Year << "=====================\n";
 	while (itor.NextNotNull()) {
 		if (temp.GetPurchaseDay() / 10000 == m_Year) {
@@ -1268,20 +1279,25 @@ void Application::DisplayYearExpenseRecord()
 		delete[] ExpenseSumPerKind;
 		delete[] ExpenseSumPerMonth;
 	}
+
+	// 해당 기간내 아이템을 종류별로 구분하여 가격을 따로따로 더한다
 	else {
 		int MaxExpenseKind = 0;
 		for (int i = 1; i < 5; i++) {
 			if (ExpenseSumPerKind[MaxExpenseKind] < ExpenseSumPerKind[i])
 				MaxExpenseKind = i;
 		}
+		// 최대로 많이 쓴 것을 차트에서 네모 25칸을 기준으로 한다
 		int PricePerBlock = ExpenseSumPerKind[MaxExpenseKind] / 25;
 
 		int m_Sum = 0;
 
+		// 최대로 많이 낸 달을 25칸을 기준으로 각 달마다 쓴돈을 차트로 표현한다
 		cout << "\n\t==========================" << m_Year << " 년 소비 분석===========================\n";
 		cout << "\t--------------------- 물건 종류 별 소비 막대차트 ---------------------\n\n";
 		cout << "\t         │\n";
 		for (int i = 0; i < 5; i++) {
+			// 해당 기간내 쓴 돈을 계산한다
 			m_Sum += ExpenseSumPerKind[i];
 			cout << "\tKind : " << i << " │ ";
 			for (int BlockCount = 0; BlockCount < ExpenseSumPerKind[i] / PricePerBlock; BlockCount++) {
@@ -1291,6 +1307,7 @@ void Application::DisplayYearExpenseRecord()
 			cout << "\t         │\n";
 		}
 
+		// 위와 동일하게 이번엔 물건 종류를 기준으로 차트를 생성한다
 		int MaxExpenseMonth = 0;
 		for (int i = 1; i < 12; i++) {
 			if (ExpenseSumPerMonth[MaxExpenseMonth] < ExpenseSumPerMonth[i])
@@ -1299,7 +1316,7 @@ void Application::DisplayYearExpenseRecord()
 		PricePerBlock = ExpenseSumPerMonth[MaxExpenseMonth] / 25;
 
 		cout << "\n\t----------------------- 월별 소비 막대차트 -----------------------\n\n";
-		cout << "\t         │\n";
+		cout << "\t           │\n";
 		for (int i = 0; i < 12; i++) {
 			cout << "\tMonth : ";
 			if (i < 9) cout << "0";
@@ -1308,8 +1325,10 @@ void Application::DisplayYearExpenseRecord()
 				cout << "■";
 			}
 			cout << " (" << ExpenseSumPerMonth[i] << "원)\n";
-			cout << "\t         │\n";
+			cout << "\t           │\n";
 		}
+
+		// 마지막으로 연간 쓴 총액을 출력한다.
 		cout << "\n\t=====================" << m_Year << " 년 지출 총액 : " << m_Sum << "원=====================\n";
 
 		delete[] ExpenseSumPerKind;

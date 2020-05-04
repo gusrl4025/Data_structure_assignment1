@@ -92,14 +92,6 @@ public:
 		@return	item을 성공적으로 교체하면 return true, 아니면 return false
 	*/
 	bool Replace(const ItemType& item);
-
-	/*
-		@brief	Queue에 있는 모든 item의 정보는 Display한다.
-		@pre	Queue가 initialize 돼야한다
-		@post	Queue에 있는 모든 item의 정보가 Display된다.
-	*/
-	void DisplayQueue();
-
 	
 
 private:

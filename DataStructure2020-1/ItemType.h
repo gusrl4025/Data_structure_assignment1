@@ -13,6 +13,7 @@ public:
 		m_Price = 0;
 		m_Id = 0;
 		m_ContainerId = -1;
+		m_StorageId = -1;
 	}
 
 	ItemType(int InId) {
@@ -22,6 +23,7 @@ public:
 		m_Price = 0;
 		m_Id = InId;
 		m_ContainerId = -1;
+		m_StorageId = -1;
 	}
 
 	/*
