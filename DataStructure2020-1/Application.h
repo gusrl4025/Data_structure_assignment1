@@ -311,6 +311,29 @@ public:
 		@post	items in TempList moved to MasterList
 	*/
 	void MoveItemTempToMaster();
+
+	//---------------AccountBook--------------------------------
+	/*
+		@brief	날짜를 입력받아 그 날 구매한 물품 목록과 총액을 출력한다.
+		@pre	MasterList가 초기화돼야된다.
+		@post	입력한 날짜에 구매한 물품과 총액이 출력된다.
+	*/
+	void DisplayDayExpenseRecord();
+
+	/*
+		@brief	달을 입력받아 그 달의 소비 분석 결과가 출력된다.
+		@pre	MasterList가 초기화돼야한다
+		@post	입력받은 달 구매한 물품 목록, 소비 패턴을 분석한 차트, 총액을 출력한다.
+	*/
+	void DisplayMonthExpenseRecord();
+	
+	/*
+		@brief	해를 입력받아 그 해의 소비 분석 결과가 출력된다.
+		@pre	MasterList가 초기화돼야한다
+		@post	입력받은 해에 구매한 물품 목록, 소비 패턴을 분석한 차트, 총액을 출력한다.
+	*/
+	void DisplayYearExpenseRecord();
+
 private:
 	DoublySortedLinkedList<ItemType> m_MasterList;
 	TempType m_TempList;

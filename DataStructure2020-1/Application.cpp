@@ -232,38 +232,14 @@ void Application::RunAccountBook()
 
 		switch (m_Command)
 		{
-		case 1:		// Item을 입력받아 ContainerId가 있으면 MasterList -1이면 TempList에 넣는다.					
-			AddMoney();
+		case 1:
+			DisplayDayExpenseRecord();
 			break;
-		case 2:		// receive keynumber from keyboard and find item in Masterlist which same keynumber and delete that item
-			CheckMoney();
+		case 2:		
+			DisplayMonthExpenseRecord();
 			break;
-		case 3:		// receive Goods record from keyboard and find item has same keynumber and replace the record with new record	
-			GetDayOfAccountBook()
-			break;
-		case 4:		// receive ID from keyboard and find item which has same ID and display that record on screen
-			GetPeriodOfAccountBook()
-			break;
-		case 5:		// receive word from keyboard and display the kind of item Kind display that record on screen
-			SearchByKindMasterList();
-			break;
-		case 6:		// receive Name from keyboard and find item which Name include the Name and display that record on screen				
-			SearchByNameMasterList();
-			break;
-		case 7:		// receive PurchaseDay from keyboard and find item which Name include the PurchaseDay and display that record on screen
-			SearchByPurchaseDayMasterList();
-			break;
-		case 8:
-			SearchByPurchasePeriodMasterList();
-			break;
-		case 9:		// make MasterList empty
-			MakeEmptyMasterList();
-			break;
-		case 10: 	// display all records in list on screen
-			DisplayAllItemMasterList();
-			break;
-		case 11:	// move item in MasterList to TempList
-			MoveItemMasterToTemp();
+		case 3:		
+			DisplayYearExpenseRecord();
 			break;
 		case 0:
 			Run();
@@ -287,6 +263,7 @@ int Application::GetCommand()
 	cout << "\t 2 : MasterList에 접근하기\n";
 	cout << "\t 3 : StorageList에 접근하기\n";
 	cout << "\t 4 : TempList에 접근하기\n";
+	cout << "\t 5 : AccountBook에 접근하기\n";
 	cout << "\t 0 : 프로그램 종료" << endl;
 	cout << endl << "\t Choose a Command--> ";
 	cin >> command;
@@ -393,13 +370,10 @@ int Application::GetCommandAccountBook()
 	cout << endl << endl;
 	cout << "\tAccountBook에서 실행할 command를 입력하세요\n";
 	cout << "\t=ID ================= Command =====================\n";
-	cout << "\t 1 : 돈 입금하기\n";
-	cout << "\t 2 : 현재 돈 확인\n";
-	cout << "\t 3 : 원하는 날짜 가계부 정리\n";
-	cout << "\t 4 :	원하는 달 가계부 정리\n";
-	cout << "\t 6 : 이름으로 Item 검색하기\n";
-	cout << "\t 7 : 구매일로 Item 검색하기\n";
-	cout << "\t 0 : 목록으로 돌아가기\n" << endl;
+	cout << "\t 1 : 원하는 날짜 소비 내역 보기\n";
+	cout << "\t 2 : 원하는 달 소비 패턴 분석\n";
+	cout << "\t 3 : 원하는 년도 소비 패턴 분석\n";
+	cout << "\t 0 :	목록으로 돌아가기\n";
 	cout << endl << "\t Choose a Command--> ";
 	cin >> command;
 	cout << endl;
@@ -1160,5 +1134,185 @@ void Application::MoveItemTempToMaster()
 				m_TempList.EnQueue(item);
 			}
 		}
+	}
+}
+
+void Application::DisplayDayExpenseRecord()
+{
+	int m_Sum = 0;
+	DoublyIterator<ItemType> itor(m_MasterList);
+	ItemType item;
+	ItemType temp = itor.Next();
+	bool found = false;
+	item.SetPurchaseDayFromKB();
+
+
+	cout << "\n\t=====================Item PurchaseDay:" << item.GetPurchaseDay() << "=====================\n";
+	while (itor.NextNotNull()) {
+		if (temp.GetPurchaseDay() == item.GetPurchaseDay()) {
+			temp.DisplayNameOnScreen();
+			temp.DisplayKindOnScreen();
+			temp.DisplayNameOnScreen();
+			temp.DisplayIdOnScreen();
+			cout << "\n";
+			found = true;
+			m_Sum += temp.GetPrice();
+		}
+		temp = itor.Next();
+	}
+
+
+
+	if (!found) {
+		cout << "\t해당하는 날에 구매한 item이 존재하지 않습니다.\n";
+		return;
+	}
+	cout << "\n\t===================" << item.GetPurchaseDay() << " 날 지출 총액 : " << m_Sum << "원===================\n";
+}
+
+// 달을 입력받아 그 해의 소비 분석 결과가 출력된다.
+void Application::DisplayMonthExpenseRecord()
+{
+	int* ExpenseSumPerKind = new int[5]();
+	DoublyIterator<ItemType> itor(m_MasterList);
+	ItemType temp = itor.Next();
+	bool found = false;
+	int m_Month;
+	cout << "\n\t소비 내역을 알고 싶은 달을 입력하시오 (예: 202005 (2020년 5월)) :";
+	cin >> m_Month;
+	while (m_Month < 190000 || m_Month > 210000 || m_Month % 100 == 0 || m_Month % 100 > 12) {
+		cout << "\n\t잘못 입력하였습니다. 소비 내역을 알고 싶은 달을 다시 입력하시오 (예: 202005 (2020년 5월)) :";
+	}
+
+	cout << "\n\t=====================Item PurchaseMonth:" << m_Month << "=====================\n";
+	while (itor.NextNotNull()) {
+		if (temp.GetPurchaseDay() / 100 == m_Month) {
+			temp.DisplayNameOnScreen();
+			temp.DisplayPriceOnScreen();
+			temp.DisplayKindOnScreen();
+			temp.DisplayIdOnScreen();
+			cout << "\n";
+			found = true;
+			ExpenseSumPerKind[temp.GetKind()] += temp.GetPrice();
+		}
+		temp = itor.Next();
+	}
+
+	if (!found) {
+		cout << "\t해당하는 달에 구매한 item이 존재하지 않습니다.\n";
+		delete[] ExpenseSumPerKind;
+	}
+	else {
+		int MaxExpenseKind = 0;
+		for (int i = 1; i < 5; i++) {
+			if (ExpenseSumPerKind[MaxExpenseKind] < ExpenseSumPerKind[i])
+				MaxExpenseKind = i;
+		}
+		int PricePerBlock = ExpenseSumPerKind[MaxExpenseKind] / 25;
+
+		int m_Sum = 0;
+
+		cout << "\n\t=========================" << m_Month << " 달 소비 분석==========================\n";
+		cout << "\t--------------------- 물건 종류 별 소비 막대차트 ---------------------\n\n";
+		cout << "\t         │\n";
+		for (int i = 0; i < 5; i++) {
+			m_Sum += ExpenseSumPerKind[i];
+			cout << "\tKind : " << i << " │ ";
+			for (int BlockCount = 0; BlockCount < ExpenseSumPerKind[i] / PricePerBlock; BlockCount++) {
+				cout << "■";
+			}
+			cout << " (" << ExpenseSumPerKind[i] << "원)\n";
+			cout << "\t         │\n";
+		}
+		cout << "\n\t====================" << m_Month << " 달 지출 총액 : " << m_Sum << "원====================\n";
+
+		delete[] ExpenseSumPerKind;
+	}
+}
+
+// 해를 입력받아 그 해의 소비 분석 결과가 출력된다.
+void Application::DisplayYearExpenseRecord()
+{
+	int* ExpenseSumPerKind = new int[5]();
+	int* ExpenseSumPerMonth = new int[12]();
+
+	DoublyIterator<ItemType> itor(m_MasterList);
+	ItemType temp = itor.Next();
+	bool found = false;
+	int m_Year;
+	int m_Month;
+	cout << "\n\t소비 내역을 알고 싶은 년도를 입력하시오 (예: 2020 (2020년)) :";
+	cin >> m_Year;
+	while (m_Year < 1900 || m_Year > 2100) {
+		cout << "\t잘못 입력하였습니다. 소비 내역을 알고 싶은 년도를 입력하시오 (예: 2020 (2020년)) :";
+		cin >> m_Year;
+	}
+
+	cout << "\n\t=====================Item PurchaseYear:" << m_Year << "=====================\n";
+	while (itor.NextNotNull()) {
+		if (temp.GetPurchaseDay() / 10000 == m_Year) {
+			m_Month = temp.GetPurchaseDay() / 100;
+			temp.DisplayNameOnScreen();
+			temp.DisplayPriceOnScreen();
+			temp.DisplayIdOnScreen();
+			cout << "\n";
+			found = true;
+			ExpenseSumPerKind[temp.GetKind()] += temp.GetPrice();
+			ExpenseSumPerMonth[m_Month % 100 - 1] += temp.GetPrice();
+		}
+		temp = itor.Next();
+	}
+
+	if (!found) {
+		cout << "\t해당하는 해에 구매한 item이 존재하지 않습니다.\n";
+		delete[] ExpenseSumPerKind;
+		delete[] ExpenseSumPerMonth;
+	}
+	else {
+		int MaxExpenseKind = 0;
+		for (int i = 1; i < 5; i++) {
+			if (ExpenseSumPerKind[MaxExpenseKind] < ExpenseSumPerKind[i])
+				MaxExpenseKind = i;
+		}
+		int PricePerBlock = ExpenseSumPerKind[MaxExpenseKind] / 25;
+
+		int m_Sum = 0;
+
+		cout << "\n\t==========================" << m_Year << " 년 소비 분석===========================\n";
+		cout << "\t--------------------- 물건 종류 별 소비 막대차트 ---------------------\n\n";
+		cout << "\t         │\n";
+		for (int i = 0; i < 5; i++) {
+			m_Sum += ExpenseSumPerKind[i];
+			cout << "\tKind : " << i << " │ ";
+			for (int BlockCount = 0; BlockCount < ExpenseSumPerKind[i] / PricePerBlock; BlockCount++) {
+				cout << "■";
+			}
+			cout << " (" << ExpenseSumPerKind[i] << "원)\n";
+			cout << "\t         │\n";
+		}
+
+		int MaxExpenseMonth = 0;
+		for (int i = 1; i < 12; i++) {
+			if (ExpenseSumPerMonth[MaxExpenseMonth] < ExpenseSumPerMonth[i])
+				MaxExpenseMonth = i;
+		}
+		PricePerBlock = ExpenseSumPerMonth[MaxExpenseMonth] / 25;
+
+		cout << "\n\t----------------------- 월별 소비 막대차트 -----------------------\n\n";
+		cout << "\t         │\n";
+		for (int i = 0; i < 12; i++) {
+			cout << "\tMonth : ";
+			if (i < 9) cout << "0";
+			cout << i + 1 << " │ ";
+			for (int BlockCount = 0; BlockCount < ExpenseSumPerMonth[i] / PricePerBlock; BlockCount++) {
+				cout << "■";
+			}
+			cout << " (" << ExpenseSumPerMonth[i] << "원)\n";
+			cout << "\t         │\n";
+		}
+		cout << "\n\t=====================" << m_Year << " 년 지출 총액 : " << m_Sum << "원=====================\n";
+
+		delete[] ExpenseSumPerKind;
+		delete[] ExpenseSumPerMonth;
 	}
 }

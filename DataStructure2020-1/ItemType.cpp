@@ -5,12 +5,20 @@
 void ItemType::SetKindFromKB() {
 	cout << "\t물품의 종류을 입력하시오(책=1, 학용품=2, 화장품=3, 전자제품=4, 기타=0) : ";
 	cin >> m_Kind;
+	while (m_Kind < 0 || m_Kind > 4) {
+		cout << "\t물품의 종류를 잘못 입력하였습니다. 다시 입력하시오(책=1, 학용품=2, 화장품=3, 전자제품=4, 기타=0) : ";
+		cin >> m_Kind;
+	}
 }
 
 // set PurchaseDay of Goods from keyboard
 void ItemType::SetPurchaseDayFromKB() {
 	cout << "\t물품의 구매일를 입력하시오(예: 19970602 (1997년6월2일)) : ";
 	cin >> m_PurchaseDay;
+	while (m_PurchaseDay < 19000000 || m_PurchaseDay > 21000000 || (m_PurchaseDay / 100) % 100 == 0 || (m_PurchaseDay / 100) % 100 > 12) {
+		cout << "\t물품의 구매일를 잘못 입력하였습니다. 다시 입력하시오(예: 19970602 (1997년6월2일)) : ";
+		cin >> m_PurchaseDay;
+	}
 }
 
 // set Name of Goods from keyboard
